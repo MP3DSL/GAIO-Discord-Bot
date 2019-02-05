@@ -1,0 +1,11 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - GaioBot",
+            "request": "launch",
+            "mainClass": "gaiobot.GaioBot",
+            "projectName": "GAIO"
+        }
+    ]
+}
