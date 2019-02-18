@@ -35,7 +35,7 @@ public class BasicCommands{
     //\/\/\/USER COMMANDS\/\/\/\\	
   	//\/\/\/ADMIN LVL BASED COMMANDS\/\/\/\\
   	//Lvl 4 Owner
-    @Command(name="prefix", type=ExecutorType.USER, description="Use this command followed by the desired prefix that you want to use for commands", power = 4)
+    @Command(name="prefix", type=ExecutorType.USER, description="Use this command followed by the desired prefix that you want to use for commands", power = 0)
 	private void prefix(User user, String[] args, MessageChannel messageChannel) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		if(args.length == 1) {
@@ -48,7 +48,7 @@ public class BasicCommands{
 		}
 	}
     //Lvl 3 Admin
-    @Command(name="clear",power=3, type=ExecutorType.USER,description="Use this command to clear 100 messages in a text channel, or specify a number of messages you'd like to be cleared! ***[Must be at least 2 and at most 100]***")
+    @Command(name="clear",power=0, type=ExecutorType.USER,description="Use this command to clear 100 messages in a text channel, or specify a number of messages you'd like to be cleared! ***[Must be at least 2 and at most 100]***")
 	private void clear(String[] args, MessageChannel messageChannel, TextChannel tc, Message msg) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		MessageHistory history = new MessageHistory(tc);
@@ -89,7 +89,7 @@ public class BasicCommands{
 	}
     //Lvl 2 SubAdmin
     //Lvl 1 Tagged
-    @Command(name="roll", type=ExecutorType.USER, power = 1, description = "Use this command by itself to roll a standard 6 sided die. Use this commmand followed by a number to roll a specified number die")
+    @Command(name="roll", type=ExecutorType.USER, power = 0, description = "Use this command by itself to roll a standard 6 sided die. Use this commmand followed by a number to roll a specified number die")
 	private void roll(User user, MessageChannel messageChannel, String[] args) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		int sides = 6;

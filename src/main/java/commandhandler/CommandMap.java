@@ -9,7 +9,9 @@ import java.util.Map;
 import commandhandler.Command.ExecutorType;
 import discordcommands.BasicCommands;
 import discordcommands.HelpCommand;
+import events.Vote;
 import gaiobot.GaioBot;
+import music.MusicCommands;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
@@ -29,7 +31,7 @@ public class CommandMap {
 	 */
 	public CommandMap(GaioBot gaioBot) {
 		this.gaioBot = gaioBot;
-		registerCommands(new BasicCommands(gaioBot, this), new HelpCommand(this));
+		registerCommands(new BasicCommands(gaioBot, this), new HelpCommand(this), new MusicCommands(), new Vote());
 		System.out.println("Loading Command Map Admins...");
 		System.out.println("Done!");
 	}
