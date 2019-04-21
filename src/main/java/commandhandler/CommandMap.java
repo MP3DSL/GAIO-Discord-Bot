@@ -1,10 +1,17 @@
 package commandhandler;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import commandhandler.Command.ExecutorType;
 import discordcommands.BasicCommands;
@@ -19,6 +26,8 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.PrivateChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import utilities.FileReading;
+import utilities.FileWriting;
 
 public class CommandMap {
 	
@@ -61,8 +70,46 @@ public class CommandMap {
 	}
 	
 	/**
-	 * return final powerMap; use for file writing
+	 * 
 	 */
+	private void load() {
+		File file = new File("SERVER_SETTINGS/userAdmins.json");
+		if (!file.exists())
+			return;
+		
+		try {
+			FileReading reader = new FileReading(file);
+			JSONArray array = reader.toJSONArray();
+			
+			for (int i = 0; i < array.length(); i++) {
+				JSONObject object = array.getJSONObject(i);
+				powers.put(object.getLong("id"), object.getInt("power"));
+			}
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
+	
+	/**
+	 * 
+	 */
+	public void save() {
+		JSONArray array = new JSONArray();
+		
+		for(Entry<Long, Integer> power : powers.entrySet()) {
+			JSONObject object = new JSONObject();
+			object.accumulate("id", power.getKey());
+			object.accumulate("power", power.getValue());
+			array.put(object);
+		}
+		
+		try(FileWriting writer = new FileWriting("SERVER_SETTINGS/userAdmins.json")) {
+			writer.write(array);
+			writer.flush();
+		} catch(IOException ioe) {
+			ioe.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Returns the administrative power level tied to the specified user
