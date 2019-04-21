@@ -13,11 +13,22 @@ public final class FileReading
 {
     private final String json;
 
+    /**
+     * Creates a new File using the specified <code>path</code>.
+     * 
+     * @param path the path of the given file, of type <code>String</code>
+     * @throws IOException
+     */
     public FileReading(String path) throws IOException
     {
         this(new File(path));
     }
 
+    /**
+     * 
+     * @param file
+     * @throws IOException
+     */
     public FileReading(File file) throws IOException
     {
         this(new InputStreamReader(new FileInputStream(file)));
