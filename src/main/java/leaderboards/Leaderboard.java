@@ -36,7 +36,7 @@ public class Leaderboard {
 		XSSFWorkbook wb;
 		XSSFSheet sh;
 		List<Guild> guilds = gaiobot.getJda().getGuilds();
-		for(int i=0; i<guilds.size(); i++) {
+		for(int i=0; i<guilds.size(); i++) { 
 			LinkedList<Object> guildLeaderboard = new LinkedList<Object>();
 			try {
 				String excelFilePath = "SERVER_SETTINGS/LEADERBOARDS/" + guilds.get(i).getName() + "_Leaderboards.xlsx";
