@@ -42,6 +42,7 @@ public class CommandMap {
 		this.gaioBot = gaioBot;
 		registerCommands(new BasicCommands(gaioBot, this), new HelpCommand(this), new MusicCommands(), new Vote());
 		System.out.println("Loading Command Map Admins...");
+		load();
 		System.out.println("Done!");
 	}
 	
@@ -70,7 +71,7 @@ public class CommandMap {
 	}
 	
 	/**
-	 * 
+	 * Loads the user settings (id and power) into the map
 	 */
 	private void load() {
 		File file = new File("SERVER_SETTINGS/userAdmins.json");
@@ -91,7 +92,7 @@ public class CommandMap {
 	}
 	
 	/**
-	 * 
+	 *  Updates and saves the user settings (id and power).
 	 */
 	public void save() {
 		JSONArray array = new JSONArray();
