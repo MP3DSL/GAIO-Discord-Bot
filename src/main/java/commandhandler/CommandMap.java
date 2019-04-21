@@ -61,6 +61,10 @@ public class CommandMap {
 	}
 	
 	/**
+	 * return final powerMap; use for file writing
+	 */
+	
+	/**
 	 * Returns the administrative power level tied to the specified user
 	 */
 	public static int getPowerUser(Guild guild, User user) {

@@ -1,6 +1,8 @@
+package group;
+
 public enum GroupRank {
     USER("Regular user"),
-    MOD("Moderator");
+    MOD("Moderator"),
     ADMIN("Group Administrator"),
     OWNER("Creator of this Discord Channel");
     private final String description;
