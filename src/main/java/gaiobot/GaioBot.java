@@ -77,6 +77,9 @@ public class GaioBot implements Runnable{
 			if(scanner.hasNextLine())
 				commandMap.commandConsole(scanner.nextLine());
 		}
+        System.out.println("Saving Command Privileges...");
+		commandMap.save();
+		System.out.println("Done!");
         System.exit(0);
     }
 

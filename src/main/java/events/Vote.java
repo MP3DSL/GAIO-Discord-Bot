@@ -109,7 +109,7 @@ public class Vote{
 		}
 		switch(args[0].toLowerCase()) {
 			case "create":
-				if(CommandMap.getPowerUser(guild, user) >= 3) {
+				if(CommandMap.getPowerUser(guild, user) >= 0) {
 					if(polls.containsKey(guild)) {
 						message("There is already a vote running on this discord!", Color.red, user, guild);
 						BotListener.noMsg = false;
@@ -172,7 +172,7 @@ public class Vote{
 				break;
 			
 			case "stats":
-				if(CommandMap.getPowerUser(guild, user) >= 3) {
+				if(CommandMap.getPowerUser(guild, user) >= 0) {
 					if(!polls.containsKey(guild)) {
 						message("There is currently no poll running on this discord!", Color.RED, user, guild);
 						BotListener.noMsg = false;
@@ -188,7 +188,7 @@ public class Vote{
 				break;
 			
 			case "close":
-				if(CommandMap.getPowerUser(guild, user) >= 3) {
+				if(CommandMap.getPowerUser(guild, user) >= 0) {
 					if(!polls.containsKey(guild)) {
 						message("There is currently no poll running on this discord!", Color.RED, user, guild);
 						BotListener.noMsg = false;

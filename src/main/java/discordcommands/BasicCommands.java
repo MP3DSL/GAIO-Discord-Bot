@@ -11,6 +11,7 @@ import gaiobot.BotListener;
 import gaiobot.Ref;
 import gaiobot.GaioBot;
 import net.dv8tion.jda.core.EmbedBuilder;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageHistory;
@@ -48,6 +49,33 @@ public class BasicCommands{
 		}
 	}
     //Lvl 3 Admin
+    @Command(name="setPermission", power=3, type=ExecutorType.USER, description="[**YOU CAN NOT GIVE SOMEONE A LEVEL HIGHER THAN YOUR OWN**] Use this command followed by the specified user and intended permission level to change the privileges for the specified user \"(Prefix)setPermission @IntendedUser 1\"")
+    private void setPermission(User user, MessageChannel channel, Guild guild, Message message, String[] args) {
+    	EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
+		if(args.length == 0 || message.getMentionedUsers().size() == 0) {
+			channel.sendMessage("setPermission <@User> <PermLvl>").queue();
+			BotListener.noMsg = false;
+			return;
+		}
+		
+		int power = 0;
+		try {
+			power = Integer.parseInt(args[1]);
+		}catch(NumberFormatException nfe) {
+			channel.sendMessage(error.setDescription("The administrator rights is numbers. The higher the number, the more rights the user has.").build()).queue();
+			BotListener.noMsg = false;
+			return;
+		}
+		if(power<CommandMap.getPowerUser(guild, user)) {
+			User target = message.getMentionedUsers().get(0);
+			CommandMap.addUserPower(target, power);
+			channel.sendMessage(new EmbedBuilder().setColor(Color.GREEN).setDescription(target.getAsMention() + " has administrator privileges of level " + power).build()).queue();
+		}
+		else {
+			channel.sendMessage(error.setDescription("You can not assign another user an admin level equal or higher than your own " + user.getAsMention() + "!").build()).queue();
+		}
+    }
+    
     @Command(name="clear",power=0, type=ExecutorType.USER,description="Use this command to clear 100 messages in a text channel, or specify a number of messages you'd like to be cleared! ***[Must be at least 2 and at most 100]***")
 	private void clear(String[] args, MessageChannel messageChannel, TextChannel tc, Message msg) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
