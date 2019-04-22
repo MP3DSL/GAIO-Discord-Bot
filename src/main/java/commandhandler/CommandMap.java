@@ -18,6 +18,7 @@ import discordcommands.HelpCommand;
 import events.Vote;
 import gaiobot.GaioBot;
 import group.GroupCommands;
+import leaderboards.LeaderboardCommands;
 import music.MusicCommands;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Guild;
@@ -40,7 +41,7 @@ public class CommandMap {
 	 */
 	public CommandMap(GaioBot gaioBot) {
 		this.gaioBot = gaioBot;
-		registerCommands(new BasicCommands(gaioBot, this), new HelpCommand(this), new MusicCommands(), new Vote(), new GroupCommands(this));
+		registerCommands(new BasicCommands(gaioBot, this), new HelpCommand(this), new MusicCommands(), new Vote(), new GroupCommands(this), new LeaderboardCommands(this, gaioBot));
 		System.out.println("Loading Command Map Admins...");
 		load();
 		System.out.println("Done!");
