@@ -6,13 +6,14 @@ import java.util.Map;
 import gaiobot.GaioBot;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.entities.Category;
+import net.dv8tion.jda.core.entities.Invite;
 import net.dv8tion.jda.core.entities.Role;
 
 public class GroupHandler {
 	private final GaioBot gaiobot;
 	private final JDA jda;
 	private final static Map<Category, Role> tags = new HashMap<>();
-	private final Map<Category, String> groups = new HashMap<>();
+	private final static Map<Category, String> groups = new HashMap<>();
 	
 	public GroupHandler(JDA jda, GaioBot gaiobot) {
 		this.jda = jda;
@@ -24,7 +25,7 @@ public class GroupHandler {
 			System.out.println("Category is already in the map!");
 		}
 		else {
-			this.AddLink(jda.getCategoriesByName(categoryName, true).get(0));
+			GroupHandler.AddLink(jda.getCategoriesByName(categoryName, true).get(0));
 		}
 	}
 	
@@ -53,12 +54,16 @@ public class GroupHandler {
 		tags.remove(category);		
 	}
 	
-	public String GetLink(Category category) {
+	public static String GetLink(Category category) {
 		return groups.get(category);
 	}
 	
-	public void AddLink(Category category) {
-		groups.put(category, category.createInvite().toString());
+	public static void AddLink(Category category) {
+		category.createInvite().setMaxUses(0).setMaxAge(0).queue();
+		System.out.println("a");
+		Invite invite = category.createInvite().complete();
+		System.out.println("b");
+		groups.put(category, invite.getURL());
 	}
 	
 	public void RemoveLink(Category category) {
