@@ -9,6 +9,13 @@ import net.dv8tion.jda.core.entities.Category;
 import net.dv8tion.jda.core.entities.Invite;
 import net.dv8tion.jda.core.entities.Role;
 
+import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageHistory;
+import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.User;
+
 public class GroupHandler {
 	private final GaioBot gaiobot;
 	private final JDA jda;
@@ -59,10 +66,7 @@ public class GroupHandler {
 	}
 	
 	public static void AddLink(Category category) {
-		category.createInvite().setMaxUses(0).setMaxAge(0).queue();
-		System.out.println("a");
-		Invite invite = category.createInvite().complete();
-		System.out.println("b");
+		Invite invite = category.getGuild().getTextChannels().get(0).createInvite().setMaxAge(0).setMaxUses(0).complete();
 		groups.put(category, invite.getURL());
 	}
 	
