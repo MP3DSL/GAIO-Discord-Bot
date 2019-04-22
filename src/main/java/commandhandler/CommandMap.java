@@ -41,7 +41,7 @@ public class CommandMap {
 	 */
 	public CommandMap(GaioBot gaioBot) {
 		this.gaioBot = gaioBot;
-		registerCommands(new BasicCommands(gaioBot, this), new HelpCommand(this), new MusicCommands(), new Vote(), new GroupCommands(this), new LeaderboardCommands(this, gaioBot));
+		registerCommands(new BasicCommands(gaioBot, this), new HelpCommand(this), new MusicCommands(), new Vote(), new GroupCommands(this), new LeaderboardCommands(this));
 		System.out.println("Loading Command Map Admins...");
 		load();
 		System.out.println("Done!");

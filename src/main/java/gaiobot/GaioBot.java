@@ -1,11 +1,13 @@
 package gaiobot;
 
+import java.io.IOException;
 import java.util.Scanner;
 
 import javax.security.auth.login.LoginException;
 
 import commandhandler.CommandMap;
 import gaiobot.BotListener;
+import leaderboards.Leaderboard;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -18,6 +20,7 @@ public class GaioBot implements Runnable{
     private final JDA jda;
     private final CommandMap commandMap = new CommandMap(this);
     private final Scanner scanner = new Scanner(System.in);
+    public static Leaderboard leaderboard;
     
     private boolean running;
 
@@ -80,6 +83,14 @@ public class GaioBot implements Runnable{
         System.out.println("Saving Command Privileges...");
 		commandMap.save();
 		System.out.println("Done!");
+		System.out.println("Saving Leaderboards...");
+		try {
+			leaderboard.close(jda);
+		} catch (IOException e) {
+			System.out.println("Failed to save leaderboards :(");
+			e.printStackTrace();
+		}
+		System.out.println("Done!");
         System.exit(0);
     }
 
@@ -87,6 +98,15 @@ public class GaioBot implements Runnable{
         try {
 			GaioBot gaiobot = new GaioBot();
 			new Thread(gaiobot, "bot").start();
+			System.out.println("Creating/Loading Leaderboards...");
+			try {
+				leaderboard = new Leaderboard(gaiobot);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("Failed to load leaderboards :(");
+			}
+			System.out.println("Done!");
 		}catch(LoginException e) {
 			System.out.println("Bot failed to connect :(");
 			e.printStackTrace();
