@@ -66,7 +66,7 @@ public class GroupHandler {
 	}
 	
 	public static void AddLink(Category category) {
-		Invite invite = category.getGuild().getTextChannels().get(0).createInvite().setMaxAge(0).setMaxUses(0).complete();
+		Invite invite = category.getChannels().get(0).createInvite().setMaxAge(0).setMaxUses(0).complete();
 		groups.put(category, invite.getURL());
 	}
 	
