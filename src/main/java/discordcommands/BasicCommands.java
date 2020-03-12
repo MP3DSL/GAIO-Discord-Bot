@@ -69,6 +69,7 @@ public class BasicCommands{
 		if(power<CommandMap.getPowerUser(guild, user)) {
 			User target = message.getMentionedUsers().get(0);
 			CommandMap.addUserPower(target, power);
+			commandMap.save();
 			channel.sendMessage(new EmbedBuilder().setColor(Color.GREEN).setDescription(target.getAsMention() + " has administrator privileges of level " + power).build()).queue();
 		}
 		else {
@@ -117,7 +118,7 @@ public class BasicCommands{
 	}
     //Lvl 2 SubAdmin
     //Lvl 1 Tagged
-    @Command(name="roll", type=ExecutorType.USER, power = 0, description = "Use this command by itself to roll a standard 6 sided die. Use this commmand followed by a number to roll a specified number die")
+    @Command(name="roll", type=ExecutorType.USER, power = 1, description = "Use this command by itself to roll a standard 6 sided die. Use this commmand followed by a number to roll a specified number die")
 	private void roll(User user, MessageChannel messageChannel, String[] args) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		int sides = 6;

@@ -1,5 +1,7 @@
 package gaiobot;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Timer;
@@ -8,7 +10,12 @@ import java.util.concurrent.TimeUnit;
 
 import commandhandler.CommandMap;
 import net.dv8tion.jda.core.Permission;
+import net.dv8tion.jda.core.entities.Emote;
+import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.Message;
+import net.dv8tion.jda.core.entities.MessageHistory;
+import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.ReadyEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberJoinEvent;
@@ -17,9 +24,13 @@ import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleAddEvent;
 import net.dv8tion.jda.core.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.core.events.message.MessageUpdateEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.core.events.role.RoleCreateEvent;
 import net.dv8tion.jda.core.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.core.hooks.EventListener;
+import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.core.managers.RoleManager;
 
 /**
  * Breaks down possible discord events in order to code accordingly for each one
@@ -59,12 +70,31 @@ public class BotListener implements EventListener{
 			onRoleDelete((RoleDeleteEvent) evt);
 		else if(evt instanceof ReadyEvent)
 			onReady((ReadyEvent) evt);
+		else if (evt instanceof MessageReactionAddEvent)
+			onMessageReactionAddEvent((MessageReactionAddEvent) evt);
+		else if (evt instanceof MessageReactionRemoveEvent) {
+			onMessageReactionRemoveEvent((MessageReactionRemoveEvent) evt);
+		}
     }
 
     /**
      * Event is triggered when bot is online and ready for use
      */
 	private void onReady(ReadyEvent evt){//JDA Events **NEEDS WORK**
+		List<Guild> guilds = evt.getJDA().getGuilds();
+		for(int i = 0; i<guilds.size(); i++) {
+			if(guilds.get(i).getTextChannelsByName("rules", true).size() != 0) {
+				//System.out.println(guilds.get(i).getName());
+				TextChannel rules = guilds.get(i).getTextChannelsByName("rules", true).get(0);
+				//System.out.println(rules.getName());
+				MessageHistory history = new MessageHistory(rules);
+				if(history != null) {
+					Message msg = history.retrievePast(1).complete().get(0);
+					//System.out.println(msg.getContentDisplay());
+					msg.addReaction("\u2705").completeAfter(50, TimeUnit.MILLISECONDS);
+				}
+			}
+		}
 	}
 
 	//\/\/\/Message Events\/\/\/\\
@@ -104,6 +134,30 @@ public class BotListener implements EventListener{
 				}
 			}
 		}
+		if(evt.getMessage().getEmotes().size()>0) {
+			List<Emote> emotes = evt.getMessage().getEmotes();
+			String message = evt.getMessage().getContentRaw();
+			int first = 0;
+			int last = 0;
+			int count = 0;
+			int numSpaces = -1;
+			for(int i = 0; i<emotes.size(); i++) {
+				first = message.indexOf("<", first);
+				last = message.indexOf(">", last) + 1;
+				count += (last-first);
+				first++;
+				numSpaces++;
+			}
+			for(int i = 0; i<emotes.size(); i++) {
+				emotes.get(i).getName();
+				try {
+					evt.getTextChannel().sendFile(new File("DISCORD_EMOJIS/" + emotes.get(i).getName() + ".png")).queue();
+					if(message.length() - (count + numSpaces)==0)
+						evt.getMessage().delete().queueAfter(30, TimeUnit.MILLISECONDS);
+				}catch(Exception e) {
+				}
+			}
+		}
     }
 
 	/**
@@ -139,6 +193,30 @@ public class BotListener implements EventListener{
 				}
 			}
 		}
+		if(evt.getMessage().getEmotes().size()>0) {
+			List<Emote> emotes = evt.getMessage().getEmotes();
+			String message = evt.getMessage().getContentRaw();
+			int first = 0;
+			int last = 0;
+			int count = 0;
+			int numSpaces = -1;
+			for(int i = 0; i<emotes.size(); i++) {
+				first = message.indexOf("<", first);
+				last = message.indexOf(">", last) + 1;
+				count += (last-first);
+				first++;
+				numSpaces++;
+			}
+			for(int i = 0; i<emotes.size(); i++) {
+				emotes.get(i).getName();
+				try {
+					evt.getTextChannel().sendFile(new File("DISCORD_EMOJIS/" + emotes.get(i).getName() + ".png")).queue();
+					if(message.length() - (count + numSpaces)==0)
+						evt.getMessage().delete().queueAfter(30, TimeUnit.MILLISECONDS);
+				}catch(Exception e) {
+				}
+			}
+		}
     }
     //\/\/\/Guild Member Events\/\/\/\\
     /**
@@ -154,6 +232,12 @@ public class BotListener implements EventListener{
 	private void onGuildMemberLeave(GuildMemberLeaveEvent evt) {
 		evt.getGuild().getTextChannelsByName(Ref.welcome, true).get(0).sendMessage("No don't go!!! I won't forget you " + evt.getUser().getAsMention() + "! :sob:").queue();
 		CommandMap.removeUserPower(evt.getUser());
+		try {
+			if(CommandMap.getPowerUser(evt.getGuild(), evt.getUser())>=1)
+				GaioBot.leaderboard.removeUser(evt.getUser(), evt.getGuild());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -179,5 +263,31 @@ public class BotListener implements EventListener{
      * Event is triggered when an existing role is deleted
      */
 	private void onRoleDelete(RoleDeleteEvent evt) {
+	}
+	
+	private void onMessageReactionAddEvent(MessageReactionAddEvent evt) {
+		//System.out.println(evt.getUser().getName());
+		if(evt.getTextChannel().getName().equals(Ref.verificationTextChannel)) {
+			if(evt.getReactionEmote().getName().equals("✅")) {
+				//System.out.println("check");
+				//System.out.println(evt.getMember().getUser().getName());
+				Role role = evt.getGuild().getRolesByName(Ref.verificationRole, true).get(0);
+				GuildController controller = new GuildController(evt.getGuild());
+				controller.addRolesToMember(evt.getMember(), role).complete();
+			}
+		}
+	}
+	
+	private void onMessageReactionRemoveEvent(MessageReactionRemoveEvent evt) {
+		//System.out.println(evt.getUser().getName());
+				if(evt.getTextChannel().getName().equals(Ref.verificationTextChannel)) {
+					if(evt.getReactionEmote().getName().equals("✅")) {
+						//System.out.println("check");
+						//System.out.println(evt.getMember().getUser().getName());
+						Role role = evt.getGuild().getRolesByName(Ref.verificationRole, true).get(0);
+						GuildController controller = new GuildController(evt.getGuild());
+						controller.removeRolesFromMember(evt.getMember(), role).complete();
+					}
+				}
 	}
 }

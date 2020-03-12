@@ -80,13 +80,14 @@ public class MusicCommands {
 	private void loadTrack(String identifier, Member author, Message msg) {
 		Guild guild = author.getGuild();
 		getPlayer(guild);	
-		manager.setFrameBufferDuration(10000); //Changed Depending on Internet Speed (kb/s)
+		manager.setFrameBufferDuration(Ref.musicBuffer); //Changed Depending on Internet Speed (kb/s)
 		manager.loadItemOrdered(guild, identifier, new AudioLoadResultHandler() {
 			@Override
 			public void trackLoaded(AudioTrack track) {
 				if(identifier.contains("twitch.tv")) {
 					msg.getTextChannel().sendMessage(new EmbedBuilder().setColor(Color.GREEN).setThumbnail("https://pbs.twimg.com/profile_images/832351122635382784/mbcECY96_400x400.jpg").setDescription("The stream \"" + track.getInfo().title + "\" was added to the playlist!").build()).queue();
 					msg.getTextChannel().sendMessage(identifier).queue();
+					getManager(guild).queue(track, author);
 				}
 				else{
 					boolean inQueue = false;
@@ -357,7 +358,7 @@ public class MusicCommands {
 						return;
 					}
 				}
-				final int songSK = num-1;
+				final int songSK = num;
 				for(int i = 0; i<songSK && i<getManager(guild).getQueue().size(); i++){
 					Timer skipSongs = new Timer();
 					skipSongs.schedule(new TimerTask() {

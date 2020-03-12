@@ -1,6 +1,7 @@
 package leaderboards;
 
 import java.awt.Color;
+import java.io.IOException;
 import java.util.List;
 
 import commandhandler.Command;
@@ -136,7 +137,7 @@ public class LeaderboardCommands {
 				return;
 			}
 			try {
-				points = Integer.parseInt(args[0]);
+				points = Integer.parseInt(args[1]);
 			}catch (Exception e) {
 				messageChannel.sendMessage(error.setDescription("Please provide an actual number "+user.getAsMention()).build()).queue();
 				e.printStackTrace();
@@ -147,12 +148,21 @@ public class LeaderboardCommands {
 				pastPoints = GaioBot.leaderboard.getPoints(target, guild);
 			}
 			catch(Exception e) {
-				
+				e.printStackTrace();
+			}
+			if(pastPoints == -1) {
+				try {
+					GaioBot.leaderboard.addUser(target, guild);
+					pastPoints = 0;
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 			if(CommandMap.getPowerUser(guild, user)>=1) {
 				try {
 					GaioBot.leaderboard.addPoints(target, guild, points);
 					points = GaioBot.leaderboard.getPoints(target, guild);
+					GaioBot.leaderboard.save(guild);
 				}catch (Exception e) {
 					System.out.println("Unable to add points to the user...");
 					e.printStackTrace();

@@ -1,5 +1,6 @@
 package gaiobot;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -52,7 +53,8 @@ public class GaioBot implements Runnable{
                 return GameType.DEFAULT;
             }
         });
-        jda = builder.buildBlocking();
+        jda = builder.build();
+        jda.awaitReady();
         System.out.println("GaioBot has connected!");
     }
     
@@ -80,6 +82,10 @@ public class GaioBot implements Runnable{
 			if(scanner.hasNextLine())
 				commandMap.commandConsole(scanner.nextLine());
 		}
+        
+        scanner.close();
+        System.out.println("GaioBOt has stopped!");
+        jda.shutdown();
         System.out.println("Saving Command Privileges...");
 		commandMap.save();
 		System.out.println("Done!");
@@ -96,6 +102,15 @@ public class GaioBot implements Runnable{
 
     public static void main(String[] args){
         try {
+        	File file = new File("SERVER_SETTINGS");
+        	if(!file.exists())
+        		new File("SERVER_SETTINGS").mkdirs();
+        	file = new File("LEADERBOARDS");
+        	if(!file.exists())
+        		new File("LEADERBOARDS").mkdirs();
+        	file = new File("DISCORD_EMOJIS");
+        	if(!file.exists())
+        		new File("DISCORD_EMOJIS").mkdirs();
 			GaioBot gaiobot = new GaioBot();
 			new Thread(gaiobot, "bot").start();
 			System.out.println("Creating/Loading Leaderboards...");

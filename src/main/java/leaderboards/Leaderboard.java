@@ -39,7 +39,7 @@ public class Leaderboard {
 		for(int i=0; i<guilds.size(); i++) {
 			LinkedList<Object> guildLeaderboard = new LinkedList<Object>();
 			try {
-				String excelFilePath = "SERVER_SETTINGS/LEADERBOARDS/" + guilds.get(i).getName() + "_Leaderboards.xlsx";
+				String excelFilePath = "LEADERBOARDS/" + guilds.get(i).getName() + "_Leaderboards.xlsx";
 				this.inputStream = new FileInputStream(new File(excelFilePath));
 				wb = new XSSFWorkbook(this.inputStream);
 			}
@@ -71,7 +71,7 @@ public class Leaderboard {
 			cell2.setCellStyle(style);
 			
 			try {
-				FileOutputStream fileOut = new FileOutputStream("SERVER_SETTINGS/LEADERBOARDS/" + guilds.get(i).getName()+"_Leaderboards.xlsx");
+				FileOutputStream fileOut = new FileOutputStream("LEADERBOARDS/" + guilds.get(i).getName()+"_Leaderboards.xlsx");
 				wb.write(fileOut);
 				fileOut.close();
 			} catch (Exception e) {
@@ -99,7 +99,7 @@ public class Leaderboard {
 			this.inputStream = (FileInputStream) guildLeaderboard.get(2);
 	}
 	public void save(Guild guild) throws IOException { //Saves the excel workbook
-		FileOutputStream fileOut = new FileOutputStream(guild.getName() + "_Leaderboards.xlsx");
+		FileOutputStream fileOut = new FileOutputStream("LEADERBOARDS/" + guild.getName() + "_Leaderboards.xlsx");
         this.workBook.write(fileOut);
         fileOut.close();
         System.out.println("Successfully Saved Leaderboards workbook for " + guild.getName());
