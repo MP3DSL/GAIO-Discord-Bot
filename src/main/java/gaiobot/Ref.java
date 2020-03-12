@@ -5,7 +5,7 @@ public class Ref{
      * 
      */
 	/*Bot Settings*/
-    public static String token = "NTQyMTIzOTQ2MTgzNjIyNjg2.DzpcFQ.NFfLyeRLX97-jWzQTfKSGJoo618";
+    public static String token = "";
     public static String prefix = ">";
     public static String version = "0.2";
     public static final int defPower = 0;
