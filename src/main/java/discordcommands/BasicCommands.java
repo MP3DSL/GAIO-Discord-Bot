@@ -12,8 +12,10 @@ import gaiobot.Ref;
 import gaiobot.GaioBot;
 import net.dv8tion.jda.core.EmbedBuilder;
 import net.dv8tion.jda.core.entities.Guild;
+import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
+import net.dv8tion.jda.core.entities.MessageEmbed.Field;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
@@ -38,7 +40,7 @@ public class BasicCommands{
   	//\/\/\/ADMIN LVL BASED COMMANDS\/\/\/\\
   	//Lvl 4 Owner
     @Command(name="setPrefix", type=ExecutorType.USER, description="Use this command followed by the desired prefix that you want to use for commands", power = 0)
-	private void prefix(User user, String[] args, MessageChannel messageChannel, Guild guild) {
+	private void setPrefix(User user, String[] args, MessageChannel messageChannel, Guild guild) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		if(args.length == 1) {
 			System.out.println("Setting Prefix...");
@@ -54,6 +56,31 @@ public class BasicCommands{
 			BotListener.noMsg = false;
 		}
 	}
+    @Command(name="adminList", power=4, type=ExecutorType.USER, description="Use this command to retrieve a list admins in your server")
+    private void adminList(MessageChannel channel, Guild guild) {
+    	EmbedBuilder list = new EmbedBuilder().setColor(Color.green);
+    	list.setTitle("***Admin List:***");
+    	String admins = "";
+    	String subAdmins = "";
+    	list.setDescription("");
+    	List<Member> members = guild.getMembers();
+    	for(Member member:members) {
+    		int memPow = CommandMap.getPowerUser(guild, member.getUser());
+    		switch(memPow) {
+    			case 3:
+    				admins += member.getUser().getName() + "\n";
+    				break;
+    			case 2:
+    				subAdmins += member.getUser().getName() + "\n";
+    				break;
+    		}
+    	}
+    	Field admin = new Field("Admins", admins, false);
+    	Field subAdmin = new Field("Sub Admins", subAdmins, false);
+    	list.addField(admin);
+    	list.addField(subAdmin);
+    	channel.sendMessage(list.build()).queue();
+    }
     //Lvl 3 Admin
     @Command(name="setPermission", power=3, type=ExecutorType.USER, description="[**YOU CAN NOT GIVE SOMEONE A LEVEL HIGHER THAN YOUR OWN**] Use this command followed by the specified user and intended permission level to change the privileges for the specified user \"(Prefix)setPermission @IntendedUser 1\"")
     private void setPermission(User user, MessageChannel channel, Guild guild, Message message, String[] args) {
@@ -83,7 +110,7 @@ public class BasicCommands{
 		}
     }
     
-    @Command(name="clear",power=0, type=ExecutorType.USER,description="Use this command to clear 100 messages in a text channel, or specify a number of messages you'd like to be cleared! ***[Must be at least 2 and at most 100]***")
+    @Command(name="clear",power=2, type=ExecutorType.USER,description="Use this command to clear 100 messages in a text channel, or specify a number of messages you'd like to be cleared! ***[Must be at least 2 and at most 100]***")
 	private void clear(String[] args, MessageChannel messageChannel, TextChannel tc, Message msg) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		MessageHistory history = new MessageHistory(tc);
