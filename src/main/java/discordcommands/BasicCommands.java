@@ -37,7 +37,7 @@ public class BasicCommands{
     //\/\/\/USER COMMANDS\/\/\/\\	
   	//\/\/\/ADMIN LVL BASED COMMANDS\/\/\/\\
   	//Lvl 4 Owner
-    @Command(name="prefix", type=ExecutorType.USER, description="Use this command followed by the desired prefix that you want to use for commands", power = 0)
+    @Command(name="setPrefix", type=ExecutorType.USER, description="Use this command followed by the desired prefix that you want to use for commands", power = 0)
 	private void prefix(User user, String[] args, MessageChannel messageChannel, Guild guild) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		if(args.length == 1) {
