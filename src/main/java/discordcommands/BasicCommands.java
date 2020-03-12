@@ -17,6 +17,7 @@ import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.MessageHistory;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import settings.PrefixHandler;
 
 public class BasicCommands{
     private final GaioBot gaioBot;
@@ -37,14 +38,19 @@ public class BasicCommands{
   	//\/\/\/ADMIN LVL BASED COMMANDS\/\/\/\\
   	//Lvl 4 Owner
     @Command(name="prefix", type=ExecutorType.USER, description="Use this command followed by the desired prefix that you want to use for commands", power = 0)
-	private void prefix(User user, String[] args, MessageChannel messageChannel) {
+	private void prefix(User user, String[] args, MessageChannel messageChannel, Guild guild) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		if(args.length == 1) {
-			Ref.prefix = args[0];
-			messageChannel.sendMessage(new EmbedBuilder().setColor(Color.GREEN).setDescription("The prefix has been changed to \"" + Ref.prefix + "\"!").build()).queue();
+			System.out.println("Setting Prefix...");
+			PrefixHandler.setPrefix(guild, args[0]);
+			System.out.println("Successfully set Prefix!");
+			if(BotListener.updatePrefixes())
+				messageChannel.sendMessage(new EmbedBuilder().setColor(Color.GREEN).setDescription("The prefix has been changed to \"" + PrefixHandler.getPrefix(guild) + "\"!").build()).queue();
+			else
+				messageChannel.sendMessage(error.setDescription("Unable to successfully change prefix :frowning2:").build()).queue();
 		}
 		else {
-			messageChannel.sendMessage(error.setDescription(user.getAsMention() + " This command only requires one argument! If you are having trouble using this specific command, use the \"" + Ref.prefix + "help prefix\"! Otherwise, use the \"" + Ref.prefix + "help\" command for a list of all available commands!").build()).queue();
+			messageChannel.sendMessage(error.setDescription(user.getAsMention() + " This command only requires one argument! If you are having trouble using this specific command, use the \"" + PrefixHandler.getPrefix(guild) + "help prefix\"! Otherwise, use the \"" + PrefixHandler.getPrefix(guild) + "help\" command for a list of all available commands!").build()).queue();
 			BotListener.noMsg = false;
 		}
 	}
@@ -119,20 +125,20 @@ public class BasicCommands{
     //Lvl 2 SubAdmin
     //Lvl 1 Tagged
     @Command(name="roll", type=ExecutorType.USER, power = 1, description = "Use this command by itself to roll a standard 6 sided die. Use this commmand followed by a number to roll a specified number die")
-	private void roll(User user, MessageChannel messageChannel, String[] args) {
+	private void roll(User user, MessageChannel messageChannel, String[] args, Guild guild) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		int sides = 6;
 		if(args.length==1) {
 			try {
 				sides = Integer.parseInt(args[0]);
 			}catch(Exception e) {
-				messageChannel.sendMessage(error.setDescription("Sorry " + user.getAsMention() + ", that is not a valid number. If you are having trouble with this specific command, use the \"" + Ref.prefix + "help roll\" command. Otherwise, type \"" + Ref.prefix + "help\" for a list of all available commands!").build()).queue();
+				messageChannel.sendMessage(error.setDescription("Sorry " + user.getAsMention() + ", that is not a valid number. If you are having trouble with this specific command, use the \"" + PrefixHandler.getPrefix(guild) + "help roll\" command. Otherwise, type \"" + PrefixHandler.getPrefix(guild) + "help\" for a list of all available commands!").build()).queue();
 				BotListener.noMsg = false;
 				return;
 			}
 		}
 		else if(args.length>1) {
-			messageChannel.sendMessage(error.setDescription("Sorry " + user.getAsMention() + ", that is not a valid number. If you are having trouble with this specific command, use the \"" + Ref.prefix + "help roll\" command. Otherwise, type \"" + Ref.prefix + "help\" for a list of all available commands!").build()).queue();
+			messageChannel.sendMessage(error.setDescription("Sorry " + user.getAsMention() + ", that is not a valid number. If you are having trouble with this specific command, use the \"" + PrefixHandler.getPrefix(guild) + "help roll\" command. Otherwise, type \"" + PrefixHandler.getPrefix(guild) + "help\" for a list of all available commands!").build()).queue();
 			BotListener.noMsg = false;
 			return;
 		}

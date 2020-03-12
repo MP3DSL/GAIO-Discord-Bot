@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
+import settings.PrefixHandler;
 
 public class LeaderboardCommands {
 	
@@ -30,7 +31,7 @@ public class LeaderboardCommands {
 	 * Allows the user to request that the leaderboard be displayed
 	 */
 	@Command(name="lb", type = ExecutorType.USER, power=1, description="Use this command to display the latest version of the activity leaderbaord")
-	public void displayBoard(User user, MessageChannel messageChannel, Message message, String args[]) {
+	public void displayBoard(User user, MessageChannel messageChannel, Message message, String args[], Guild guild) {
 		EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		if(messageChannel instanceof TextChannel) {
 			TextChannel textChannel = (TextChannel)messageChannel;
@@ -59,7 +60,7 @@ public class LeaderboardCommands {
 			}
 		}
 		else {
-			messageChannel.sendMessage(error.setDescription("Sorry, you didn't exicute the command properly " + user.getAsMention() + ". If you are having trouble, please use the \"" + Ref.prefix + "help leaderboard\" command for information on how to use this specific command!").build()).queue();
+			messageChannel.sendMessage(error.setDescription("Sorry, you didn't exicute the command properly " + user.getAsMention() + ". If you are having trouble, please use the \"" + PrefixHandler.getPrefix(guild) + "help leaderboard\" command for information on how to use this specific command!").build()).queue();
 			return;
 		}
 		EmbedBuilder builder = new EmbedBuilder();
@@ -120,7 +121,7 @@ public class LeaderboardCommands {
 			}
 		}
 		else {
-			messageChannel.sendMessage(error.setDescription("Sorry, you didn't exicute the command properly " + user.getAsMention() + ". If you are having trouble, please use the \"" + Ref.prefix + "help points\" command for information on how to use this specific command!").build()).queue();
+			messageChannel.sendMessage(error.setDescription("Sorry, you didn't exicute the command properly " + user.getAsMention() + ". If you are having trouble, please use the \"" + PrefixHandler.getPrefix(guild) + "help points\" command for information on how to use this specific command!").build()).queue();
 		}
 	}
 	
@@ -175,7 +176,7 @@ public class LeaderboardCommands {
 			}
 		}
 		else {
-			messageChannel.sendMessage(error.setDescription("Sorry, you didn't exicute the command properly " + user.getAsMention() + ". If you are having trouble, please use the \"" + Ref.prefix + "help addPoints\" command for information on how to use this specific command!").build()).queue();
+			messageChannel.sendMessage(error.setDescription("Sorry, you didn't exicute the command properly " + user.getAsMention() + ". If you are having trouble, please use the \"" + PrefixHandler.getPrefix(guild) + "help addPoints\" command for information on how to use this specific command!").build()).queue();
 		}
 	}
 

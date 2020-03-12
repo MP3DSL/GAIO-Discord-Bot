@@ -19,6 +19,7 @@ import net.dv8tion.jda.core.entities.Member;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.impl.UserImpl;
+import settings.PrefixHandler;
 
 public class Vote{
 	
@@ -61,7 +62,7 @@ public class Vote{
 		return new EmbedBuilder()
 				.setAuthor(poll.getCreator(guild).getEffectiveName() + "'s poll", null, guild.getIconUrl())
 				.setDescription(":pencil:   " + poll.heading + "\n\n" + ansSTR.toString())
-				.setFooter("Enter " + Ref.prefix + "vote v [number] to vote!", null)
+				.setFooter("Enter " + PrefixHandler.getPrefix(guild) + "vote v [number] to vote!", null)
 				.setColor(Color.cyan);
 	}
 	
@@ -82,7 +83,7 @@ public class Vote{
 			EmbedBuilder eb = new EmbedBuilder().setTitle("***VOTE ARGUMENTS***");
 					eb.setDescription("Here's a list of valid vote arguments:");
 				if(CommandMap.getPowerUser(guild, user)>=3) {
-					eb.addField("create", "Use this argument to create a poll! \nFormat = \"" + Ref.prefix + "vote create 'question'|'answer1'|'answer2'|'answer3'|...", false);
+					eb.addField("create", "Use this argument to create a poll! \nFormat = \"" + PrefixHandler.getPrefix(guild) + "vote create 'question'|'answer1'|'answer2'|'answer3'|...", false);
 					eb.addField("close", "Use this argument to close an existing poll! (***Must be the creator or an owner of the discord!***)", false);
 					eb.addField("stats", "Use this argument to see the stats of an existing poll!", false);
 				}

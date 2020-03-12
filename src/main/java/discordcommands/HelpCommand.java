@@ -14,6 +14,7 @@ import net.dv8tion.jda.core.entities.Guild;
 import net.dv8tion.jda.core.entities.MessageChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.impl.UserImpl;
+import settings.PrefixHandler;
 
 public class HelpCommand {
 
@@ -42,7 +43,7 @@ public class HelpCommand {
 				}
 			}catch(Exception e) {
 				e.printStackTrace();
-				channel.sendMessage(new EmbedBuilder().setColor(Color.red).setDescription("The command that you are looking up does not exist, please enter a valid command or type \"" + Ref.prefix + "help\" for a list of all available commands " + user.getAsMention() + "!").build()).queue();
+				channel.sendMessage(new EmbedBuilder().setColor(Color.red).setDescription("The command that you are looking up does not exist, please enter a valid command or type \"" + PrefixHandler.getPrefix(guild) + "help\" for a list of all available commands " + user.getAsMention() + "!").build()).queue();
 				BotListener.noMsg = false;
 				return;
 			}

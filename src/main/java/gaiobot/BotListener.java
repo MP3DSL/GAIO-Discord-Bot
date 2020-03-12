@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
@@ -30,7 +31,7 @@ import net.dv8tion.jda.core.events.role.RoleCreateEvent;
 import net.dv8tion.jda.core.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.core.hooks.EventListener;
 import net.dv8tion.jda.core.managers.GuildController;
-import net.dv8tion.jda.core.managers.RoleManager;
+import settings.PrefixHandler;
 
 /**
  * Breaks down possible discord events in order to code accordingly for each one
@@ -39,6 +40,7 @@ public class BotListener implements EventListener{
     private final CommandMap commandMap;
     public static boolean noMsg = true;
     private static boolean pinned = false;
+    private static Map <Guild, String> prefixes;
     
     public BotListener(CommandMap commandMap){
         this.commandMap = commandMap;
@@ -125,8 +127,8 @@ public class BotListener implements EventListener{
 			}
 		}
 		String msg = evt.getMessage().getContentRaw();
-		if(msg.startsWith(Ref.prefix)) {
-			msg = msg.replaceFirst(Ref.prefix, "");
+		if(msg.startsWith(prefixes.get(evt.getGuild()))) {
+			msg = msg.replaceFirst(prefixes.get(evt.getGuild()), "");
 			if(commandMap.commandUser(evt.getAuthor(), msg, evt.getMessage())) {
 				if(evt.getTextChannel() != null && evt.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
 					if(!msg.contains("clear"))
@@ -184,8 +186,8 @@ public class BotListener implements EventListener{
 			}
 		}
 		String msg = evt.getMessage().getContentRaw();
-		if(msg.startsWith(Ref.prefix)) {
-			msg = msg.replaceFirst(Ref.prefix, "");
+		if(msg.startsWith(prefixes.get(evt.getGuild()))) {
+			msg = msg.replaceFirst(prefixes.get(evt.getGuild()), "");
 			if(commandMap.commandUser(evt.getAuthor(), msg, evt.getMessage())) {
 				if(evt.getTextChannel() != null && evt.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_MANAGE)) {
 					if(!msg.contains("clear"))
@@ -223,7 +225,7 @@ public class BotListener implements EventListener{
      * Event is triggered when a user joins the discord
      */
 	private void onGuildMemberJoin(GuildMemberJoinEvent evt) {
-		evt.getGuild().getTextChannelsByName(Ref.welcome, true).get(0).sendMessage("Welcome to the " + evt.getGuild().getName() + " discord " + evt.getUser().getAsMention() + "! For a list of commands, use the \"" + Ref.prefix + "help\" command and I will pm you the list of commands with a description for each one!").queue();
+		evt.getGuild().getTextChannelsByName(Ref.welcome, true).get(0).sendMessage("Welcome to the " + evt.getGuild().getName() + " discord " + evt.getUser().getAsMention() + "! For a list of commands, use the \"" + prefixes.get(evt.getGuild()) + "help\" command and I will pm you the list of commands with a description for each one!").queue();
 	}
 	
 	/**
@@ -289,5 +291,14 @@ public class BotListener implements EventListener{
 						controller.removeRolesFromMember(evt.getMember(), role).complete();
 					}
 				}
+	}
+	
+	public static void setPrefixes(GaioBot bot) {
+		prefixes = PrefixHandler.loadPrefixes(bot);
+	}
+	
+	public static boolean updatePrefixes() {
+		prefixes = PrefixHandler.getPrefixes();
+		return true;
 	}
 }

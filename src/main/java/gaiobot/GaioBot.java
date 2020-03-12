@@ -15,6 +15,7 @@ import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Game.GameType;
+import settings.PrefixHandler;
 
 public class GaioBot implements Runnable{
 
@@ -89,6 +90,10 @@ public class GaioBot implements Runnable{
         System.out.println("Saving Command Privileges...");
 		commandMap.save();
 		System.out.println("Done!");
+		System.out.println("Saving Guild Prefixes...");
+		if(!PrefixHandler.close(jda))
+			System.out.println("Faild to save Guild Prefixes :(");
+		System.out.println("Done!");
 		System.out.println("Saving Leaderboards...");
 		try {
 			leaderboard.close(jda);
@@ -113,6 +118,13 @@ public class GaioBot implements Runnable{
         		new File("DISCORD_EMOJIS").mkdirs();
 			GaioBot gaiobot = new GaioBot();
 			new Thread(gaiobot, "bot").start();
+			System.out.println("Creating/Loading Guild Prefixes...");
+			try {
+				PrefixHandler.loadPrefixes(gaiobot);
+				BotListener.setPrefixes(gaiobot);
+			}catch(Exception e) {
+				System.out.println("Failed to create/load guild prefixes");
+			}
 			System.out.println("Creating/Loading Leaderboards...");
 			try {
 				leaderboard = new Leaderboard(gaiobot);

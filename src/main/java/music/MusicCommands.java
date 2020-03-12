@@ -32,6 +32,7 @@ import net.dv8tion.jda.core.entities.Message;
 import net.dv8tion.jda.core.entities.TextChannel;
 import net.dv8tion.jda.core.entities.User;
 import net.dv8tion.jda.core.entities.impl.UserImpl;
+import settings.PrefixHandler;
 
 public class MusicCommands {
 	
@@ -198,7 +199,7 @@ public class MusicCommands {
 			EmbedBuilder builder = new EmbedBuilder();
 			builder.setColor(Color.CYAN)
 					.setTitle("***VALID MUSIC COMMANDS***")
-					.setDescription("Here's a list of the available music argument commands!\nExample: \"" + Ref.prefix + "music [insert argument(s)]\"")
+					.setDescription("Here's a list of the available music argument commands!\nExample: \"" + PrefixHandler.getPrefix(guild) + "music [insert argument(s)]\"")
 					.addField("nowplaying or np or info", "Use this argument to see information on the current song! Provide a song number to get info on that specific song!", false)
 					.addField("pause", "Use this argument to pause the current song!", false)
 					.addField("play or p", "Use this argument along with a valid YouTube/Twitch/Soundcloud url to add a song or playlist to the queue! If you are searching for a song, be as specifc as possible! If the music player is paused, use this command by itself to continue playing the song that was paused.", false)
@@ -206,7 +207,7 @@ public class MusicCommands {
 					.addField("queue or q", "Use this argument to see the first 20 songs in the queue! If you'd like to see the rest of the queue, you can navigate through the pages by providing a page number!", false)
 					.addField("remove or r", "Use this argument to remove the most recently queued song! Specifying a song number removes that specific song from the queue!", false)
 					.addField("shuffle or sh", "Use this argument to shuffle the queue!", false)
-					.addField("seek or s", "Use this argument to seek the current playing track to the designated point! \n***DOES NOT WORK ON LIVE STREAMS*** \nTime Format = hrs:min:sec Example: \"" + Ref.prefix + "music seek 01:20:02\" ", false)
+					.addField("seek or s", "Use this argument to seek the current playing track to the designated point! \n***DOES NOT WORK ON LIVE STREAMS*** \nTime Format = hrs:min:sec Example: \"" + PrefixHandler.getPrefix(guild) + "music seek 01:20:02\" ", false)
 					.addField("skip or sk", "Use this argument by itself to skip ahead 1 song! If you provide a number, the music player will skip that many number of songs ahead!", false)
 					.addField("stop or st", "Use this argument to stop the current song and clear the queue!", false)
 					.build();
