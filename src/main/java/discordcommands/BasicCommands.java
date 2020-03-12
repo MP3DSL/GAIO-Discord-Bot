@@ -82,8 +82,8 @@ public class BasicCommands{
     	channel.sendMessage(list.build()).queue();
     }
     //Lvl 3 Admin
-    @Command(name="setPermission", power=3, type=ExecutorType.USER, description="[**YOU CAN NOT GIVE SOMEONE A LEVEL HIGHER THAN YOUR OWN**] Use this command followed by the specified user and intended permission level to change the privileges for the specified user \"(Prefix)setPermission @IntendedUser 1\"")
-    private void setPermission(User user, MessageChannel channel, Guild guild, Message message, String[] args) {
+    @Command(name="setPerm", power=3, type=ExecutorType.USER, description="[**YOU CAN NOT GIVE SOMEONE A LEVEL HIGHER THAN YOUR OWN**] Use this command followed by the specified user and intended permission level to change the privileges for the specified user \"(Prefix)setPerm @IntendedUser 1\"")
+    private void setPerm(User user, MessageChannel channel, Guild guild, Message message, String[] args) {
     	EmbedBuilder error = new EmbedBuilder().setColor(Color.red);
 		if(args.length == 0 || message.getMentionedUsers().size() == 0) {
 			channel.sendMessage("setPermission <@User> <PermLvl>").queue();
